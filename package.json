@@ -11,6 +11,7 @@
     "jade": "*",
     "less-middleware": "*",
     "mongodb": "*",
-    "nodemailer": "*"
+    "nodemailer": "*",
+    "ttapi": "2.0.1"
   }
 }
