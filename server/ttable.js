@@ -10,7 +10,7 @@ var AUTH       = require('./secret.js').AUTH
   , bot        = new Bot(AUTH, USERID, ROOMID)
   ;
 
-// Register in the right room
+// Event Handlers
 bot.on('ready',       function (data) { bot.roomRegister(ROOMID);       });
 bot.on('roomChanged', function (data) { beginjs.begin(data, bot);       });
 bot.on('speak',       function (data) { speakjs.spoken(data, bot);      });

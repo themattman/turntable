@@ -1,13 +1,8 @@
-## Skeleton for Node apps
+## My Turntable Bot - MattBot
 
-Meant for rapid prototyping.
+### Features
 
-### How to use
-
-`git clone git@github.com:themattman/node-skeleton.git`
-
-`cd node-skeleton`
-
-`npm install`
-
-`node server`
+* Begin
+* Register
+* Song
+* Speak
