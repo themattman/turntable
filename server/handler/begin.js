@@ -1,4 +1,5 @@
-var colors = require('colors');
+var colors = require('colors')
+;
 
 exports.begin = function(data, bot){
   console.log('The bot has entered the "%s" room.'.green, data.room.name);
@@ -31,4 +32,4 @@ var callback = function(e, b) {
   } else {
     console.log('The bot failed to become moderator [%s]'.red, e.err);
   }
-}
+};

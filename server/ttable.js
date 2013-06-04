@@ -9,7 +9,7 @@ var AUTH       = require('./secret.js').AUTH
   , colors     = require('colors')
   , Bot        = require('ttapi')
   , bot        = new Bot(AUTH, USERID, ROOMID)
-  ;
+;
 
 // Event Handlers
 bot.on('ready',       function (data) { bot.roomRegister(ROOMID);       });
