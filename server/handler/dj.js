@@ -5,20 +5,12 @@ var mods   = []
 
 mods = secret.mods;
 
+// Triggered when a user takes a dj spot
 exports.dj = function(data, bot){
-  for(var i = 0; i < mods.length; i++){
-    if(data.userid === mods[i]){
-      authd = true;
-    }
-  }
 
-  if(!authd){
-    //bot.remDj(data.userid);
-    console.log('!authd1');
-  }
-
-  if(!mods[data.userid]){
-    //bot.remDj(data.userid);
-    console.log('!authd2');
+  // Boot the dj if he is not in the whitelist
+  if(mods.indexOf(data.user[0].userid) === -1){
+    console.log('The DJ "%s" is not approved, he has been booted.', data.user[0].userid);
+    bot.remDj(data.user[0].userid);
   }
 };

@@ -1,10 +1,17 @@
-var USERID = require('../secret.js').USERID
+var colors = require('colors')
+  , USERID = require('../secret.js').USERID
 ;
 
 exports.newsong = function(data, bot){
-  console.log('new_song');
+
+  // Log new song metadata
+  console.log('new_song'.cyan);
+  console.log(data.room.metadata.current_song.metadata);
+
   var cur_dj = data.room.metadata.current_dj;
   if(data.room.metadata.current_dj === USERID){
+
+    // Kill the outro
     var song_length = data.room.metadata.current_song.metadata.length;
     var song_delta = (song_length*1000 > 10000)? (song_length*1000)-10000 : 0;//song_length;
     /*setTimeout(function(){
