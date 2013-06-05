@@ -7,9 +7,19 @@ var AUTH       = require('./secret.js').AUTH
   , speakjs    = require('./handler/speak.js')
   , songjs     = require('./handler/song.js')
   , colors     = require('colors')
+  , mongo      = require('./database.js')
   , Bot        = require('ttapi')
   , bot        = new Bot(AUTH, USERID, ROOMID)
 ;
+
+// Connect to the MongoHQ instance
+mongo.connect(function(msg, col) {
+  if(msg == null) {
+    console.log("Mongo Connected!".yellow);
+    collection = col;
+  } else 
+    console.log(msg);
+});
 
 // Event Handlers
 bot.on('ready',       function (data) { bot.roomRegister(ROOMID);       });
