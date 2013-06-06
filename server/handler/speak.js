@@ -24,7 +24,7 @@ exports.spoken = function(data, bot){
             bot.speak('DJ Removed');
           });
         });
-      }else if(data.text.match(/^\/shuffle$/) || data.text.match(/^\/skip$/)){
+      }else if(data.text.match(/^\/next$/) || data.text.match(/^\/skip$/)){
 
         // Skip to the next song
         // [/shuffle, /skip]
@@ -48,7 +48,7 @@ exports.spoken = function(data, bot){
         bot.speak('@' + data.name + ', HERE COME THE WUBS');
         bot.playlistAll(function(playlist){
           var notfound = true;
-          for(var i = (playlist.list.length-1); i >= 0 && notfound; i--){
+          for(var i = 0; i < playlist.list.length && notfound; i++){
             if( playlist.list[i].metadata.genre
               && (playlist.list[i].metadata.genre.indexOf('dubstep') !== -1
               || playlist.list[i].metadata.genre.indexOf('Dubstep') !== -1)){
@@ -67,12 +67,12 @@ exports.spoken = function(data, bot){
 
         // Play a genre the user wants
         // [/genre MY_GENRE, /music MY_GENRE]
-        var genre = String(data.text.substr(7, data.text.length-7));
         console.log('genre selector'.grey, genre);
+        var genre = String(data.text.substr(7, data.text.length-7));
         bot.speak('@' + data.name + ', I will play something in the "' + genre +  '" genre.');
         bot.playlistAll(function(playlist){
           var notfound = true;
-          for(var i = (playlist.list.length-1); i >= 0 && notfound; i--){
+          for(var i = 0; i < playlist.list.length && notfound; i++){
             if( playlist.list[i].metadata.genre
               && playlist.list[i].metadata.genre.indexOf(genre) !== -1){
 
@@ -85,7 +85,55 @@ exports.spoken = function(data, bot){
               });
             }
           }
+          if(notfound){
+            bot.speak('Sorry, I couldn\'t find any such songs dude');
+          }
         });
+      }else if(data.text.match(/^\/random$/) || data.text.match(/^\/shuffle$/)){
+
+        // Skip to a random song
+        // [/random, /shuffle]
+        console.log('random || shuffle'.grey);
+        bot.speak('@' + data.name + ', LETS FIND YOU A SONG!');
+        bot.playlistAll(function(playlist){
+          var notfound = true;
+
+          // Choose a song at random
+          var song_position = parseInt((playlist.list.length-11)*Math.random());
+          console.log('song #%s | %s by: %s', song_position, playlist.list[song_position].metadata.song, playlist.list[song_position].metadata.artist);
+          bot.playlistReorder(song_position, 0, function(){
+            console.log('Song is to be skipped!'.yellow);
+            bot.skip();
+          });
+
+        });
+      }else if(data.text.match(/^\/search/) || data.text.match(/^\/find/)){
+
+        // Skip to a specific song
+        // [/search, /find]
+        console.log('search || find'.grey);
+        var query = String(data.text.substr(7, data.text.length-7));
+        if(query[0] == ' '){
+          query = query.substr(1, query.length-1);
+        }
+        bot.speak('@' + data.name + ', I\'m looking for the song "' + query + '"');
+        bot.playlistAll(function(playlist){
+          var notfound = true;
+          for(var i = 0; i < playlist.list.length && notfound; i++){
+            //if(playlist.list[i].metadata.song){console.log('(%s) (%s) = %s', playlist.list[i].metadata.song, query, playlist.list[i].metadata.song.indexOf(query));}
+            if( (playlist.list[i].metadata.song && playlist.list[i].metadata.song.toLowerCase().indexOf(query) !== -1)
+             || (playlist.list[i].metadata.artist && playlist.list[i].metadata.artist.toLowerCase().indexOf(query) !== -1) ){
+              notfound = false;
+              bot.playlistReorder(i, 0, function(){
+                bot.skip();
+              });
+            }
+          }
+          if(notfound){
+            bot.speak('Sorry, I couldn\'t find any such songs dude');
+          }
+        });
+
       }
 
     }
