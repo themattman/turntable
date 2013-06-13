@@ -6,3 +6,7 @@
 * Register
 * Song
 * Speak
+
+## Run the server like so
+
+`time (node-dev server) 2> log_file.txt &`
