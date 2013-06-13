@@ -4,7 +4,6 @@ var colors = require('colors')
 
 // This logic does all the chat parsing and corresponding bot behavior
 exports.spoken = function(data, bot){
-  console.log(data);
 
   if(data){
     console.log(data.userid, USERID);
