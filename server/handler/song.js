@@ -5,8 +5,8 @@ var colors = require('colors')
 exports.newsong = function(data, bot){
 
   // Log new song metadata
-  console.log('new_song'.cyan);
-  console.log(data.room.metadata.current_song.metadata);
+  //console.log('new_song'.cyan);
+  //console.log(data.room.metadata.current_song.metadata);
 
   var cur_dj = data.room.metadata.current_dj;
   if(data.room.metadata.current_dj === USERID){
