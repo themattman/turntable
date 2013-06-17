@@ -1,5 +1,6 @@
 var colors = require('colors')
   , USERID = require('../secret.js').USERID
+  , mongo  = require('../database.js')
 ;
 
 exports.newsong = function(data, bot){
@@ -25,7 +26,28 @@ exports.newsong = function(data, bot){
   }
 };
 
-exports.endsong = function(data, bot){
+exports.addsong = function(data, bot){
   bot.playlistAdd(data.room.metadata.current_song._id);
   bot.addDj(function(d){});
+};
+
+exports.recordsong = function(data, bot){
+  mongo.db.collection('song_log', function(err, col){
+    if(err){throw err;}
+    // Record data suitable for MapReduce
+    var log_data = {
+      'ts': Date.now()
+      , 'dj': data.room.metadata.current_song.djname
+      , 'djid': data.room.metadata.current_song.djid
+      , 'song': data.room.metadata.current_song.metadata.song
+      , 'artist': data.room.metadata.current_song.metadata.artist
+      , 'genre': data.room.metadata.current_song.metadata.genre
+    };
+
+    col.insert(log_data, function(err, d){
+      if(err){throw err;}
+    });
+  });
+
+  exports.addsong(data, bot);
 };

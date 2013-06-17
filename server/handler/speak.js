@@ -4,10 +4,17 @@ var colors = require('colors')
 
 // This logic does all the chat parsing and corresponding bot behavior
 exports.spoken = function(data, bot){
-
   if(data){
-    console.log(data.userid, USERID);
+    //console.log(data, USERID);
+    // Don't respond to your own speech and cause an inf loop!
     if(data.userid !== USERID) {
+
+      // Respond to eric
+      if(data.userid === '504b8980aaa5cd759e000541'){
+        var words_to_speak = '@' + data.name + ' EricBot can speak??!?';
+        bot.speak(words_to_speak);
+      }
+
       if(data.text.match(/^\/hello$/)){
 
         // Say hi to the bot
@@ -134,8 +141,6 @@ exports.spoken = function(data, bot){
         });
 
       }
-
     }
-
   }
 };
