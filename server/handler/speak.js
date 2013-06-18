@@ -1,25 +1,19 @@
 var colors = require('colors')
   , USERID = require('../secret.js').USERID
+  , chatty = require('../ttable.js')
 ;
 
 // This logic does all the chat parsing and corresponding bot behavior
 exports.spoken = function(data, bot){
   if(data){
-    //console.log(data, USERID);
     // Don't respond to your own speech and cause an inf loop!
     if(data.userid !== USERID) {
-
-      // Respond to eric
-      if(data.userid === '504b8980aaa5cd759e000541'){
-        var words_to_speak = '@' + data.name + ' EricBot can speak??!?';
-        bot.speak(words_to_speak);
-      }
 
       if(data.text.match(/^\/hello$/)){
 
         // Say hi to the bot
         // [/hello]
-        bot.speak('Hey! How are you @' + data.name + ' ?');
+        bot.speak('Hey :panda_face:! How are you @' + data.name + ' ?');
       }else if(data.text.match(/^\/boot$/)){
 
         // Boot the current dj
@@ -105,7 +99,7 @@ exports.spoken = function(data, bot){
           var notfound = true;
 
           // Choose a song at random
-          var song_position = parseInt((playlist.list.length-11)*Math.random());
+          var song_position = parseInt((playlist.list.length-11)*Math.random(), 10);
           console.log('song #%s | %s by: %s', song_position, playlist.list[song_position].metadata.song, playlist.list[song_position].metadata.artist);
           bot.playlistReorder(song_position, 0, function(){
             console.log('Song is to be skipped!'.yellow);
@@ -126,12 +120,11 @@ exports.spoken = function(data, bot){
         bot.playlistAll(function(playlist){
           var notfound = true;
           for(var i = 0; i < playlist.list.length && notfound; i++){
-            //if(playlist.list[i].metadata.song){console.log('(%s) (%s) = %s', playlist.list[i].metadata.song, query, playlist.list[i].metadata.song.indexOf(query));}
             if( (playlist.list[i].metadata.song && playlist.list[i].metadata.song.toLowerCase().indexOf(query) !== -1)
              || (playlist.list[i].metadata.artist && playlist.list[i].metadata.artist.toLowerCase().indexOf(query) !== -1) ){
               notfound = false;
               bot.playlistReorder(i, 0, function(){
-                bot.skip();
+                //bot.skip();
               });
             }
           }
@@ -139,7 +132,12 @@ exports.spoken = function(data, bot){
             bot.speak('Sorry, I couldn\'t find any such songs dude');
           }
         });
-
+      }else if(data.text.match(/^\/cure/)){
+        chatty.chatty.emit('off');
+      }else if(data.text.match(/^\/infect/)){
+        chatty.chatty.emit('on');
+      }else if(data.text.match(/botdance/)){
+        bot.speak(':heart::heart::heart::dancer::panda_face::heart::heart::heart:');
       }
     }
   }

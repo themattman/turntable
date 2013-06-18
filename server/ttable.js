@@ -7,12 +7,20 @@ var AUTH       = require('./secret.js').AUTH
   , registerjs = require('./handler/register.js')
   , speakjs    = require('./handler/speak.js')
   , songjs     = require('./handler/song.js')
-  , colors     = require('colors')
   , quotes     = require('./quotes.js').startrek
   , mongo      = require('./database.js')
+  , colors     = require('colors')
+  , events     = require('events')
   , Bot        = require('ttapi')
   , bot        = new Bot(AUTH, USERID, ROOMID[VERSION - 1])
+  , disease
 ;
+
+exports.chatty = new events.EventEmitter();
+function tourettes(){
+  var r = Math.round((quotes.length-1)*Math.random());
+  bot.speak(quotes[r]);
+};
 
 // Connect to the MongoHQ instance
 mongo.connect(function(msg, col) {
@@ -47,12 +55,6 @@ if(VERSION === 1) {
 } else if(VERSION === 2) {
   // 2: Tourette's Bot
 
-  // This bot has tourettes
-  setInterval(function(){
-    var r = Math.round((quotes.length-1)*Math.random());
-    bot.speak(quotes[r]);
-  }, 1000*(1+100*Math.random()));
-
   bot.on('ready',         function (data) { bot.roomRegister(ROOMID[VERSION - 1]); });
   bot.on('roomChanged',   function (data) { beginjs.begin(data, bot);              });
   bot.on('registered',    function (data) { registerjs.register(data, bot);        });
@@ -69,12 +71,6 @@ if(VERSION === 1) {
 } else if(VERSION === 3) {
   // 3: QInterns Bot
 
-  // This bot has tourettes
-  setInterval(function(){
-    var r = Math.round((quotes.length-1)*Math.random());
-    bot.speak(quotes[r]);
-  }, 4000*(1+100*Math.random()));
-
   bot.on('ready',         function (data) { bot.roomRegister(ROOMID[VERSION - 1]); });
   bot.on('roomChanged',   function (data) { beginjs.begin(data, bot);              });
   bot.on('speak',         function (data) { speakjs.spoken(data, bot);             });
@@ -85,6 +81,17 @@ if(VERSION === 1) {
   bot.on('rem_moderator', function (data) { registerjs.recordMod(data, bot);       });
   bot.on('add_dj',        function (data) { djjs.recordDj(data, bot);              });
   bot.on('rem_dj',        function (data) { djjs.recordDj(data, bot);              });
+
+  exports.chatty.on('on', function(data){
+    // This bot has tourettes
+    disease = setInterval(tourettes, (4000*(1+100*Math.random())));
+    bot.speak('Ahhhhhhhhh, I\'m...chicawigawah DOWN WITH THE SICKNESS.');
+  });
+
+  exports.chatty.on('off', function(data){
+    clearInterval(disease);
+    bot.speak('Ok, I\'ll shut up now. Carry on folks.');
+  });
 
 }
 
