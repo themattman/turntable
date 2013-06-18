@@ -138,6 +138,20 @@ exports.spoken = function(data, bot){
         chatty.chatty.emit('on');
       }else if(data.text.match(/botdance/)){
         bot.speak(':heart::heart::heart::dancer::panda_face::heart::heart::heart:');
+      }else if(data.text.match(/\/stepdown/)){
+        bot.speak('As you wish, '+data.name);
+        bot.remDj(USERID, function(err){
+          if(err.success !== true){
+            bot.speak('Agh, something went wrong.');
+          }
+        });
+      }else if(data.text.match(/\/stepup/)){
+        bot.speak('Gladly, '+data.name);
+        bot.addDj(function(err){
+          if(err.success !== true){
+            bot.speak('Agh, something went wrong.');
+          }
+        });
       }
     }
   }
